@@ -11,11 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::resource('subbreddit', 'SubbredditController');
+Route::resource('subbreddits', 'SubbredditsController', [
+	'except' => ['edit', 'create']
+]);
 
 /*
 |--------------------------------------------------------------------------
