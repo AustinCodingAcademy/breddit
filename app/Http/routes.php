@@ -11,12 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::resource('subbreddit', 'SubbredditController');
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -29,5 +23,21 @@ Route::resource('subbreddit', 'SubbredditController');
 */
 
 Route::group(['middleware' => ['web']], function () {
-    //
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+    Route::resource('subbreddits', 'SubbredditsController', [
+    	'only' => ['index', 'show']
+    ]);
+});
+
+Route::group(['middleware' => 'web'], function () {
+    Route::auth();
+
+    Route::get('/home', 'HomeController@index');
+
+    Route::resource('subbreddits', 'SubbredditsController', [
+    	'except' => ['create', 'edit']
+    ]);
 });

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class SubbredditController extends Controller
+class SubbredditsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,6 @@ class SubbredditController extends Controller
         return \App\Subbreddit::all();
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
@@ -28,7 +27,13 @@ class SubbredditController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $subbreddit = new \App\Subbreddit;
+        $subbreddit->user_id = Auth::user()->id;
+        $subbreddit->name = $request->name;
+        $subbreddit->description = $request->description;
+        $subbreddit->save();
+
+        return $subbreddit;
     }
 
     /**
@@ -39,7 +44,10 @@ class SubbredditController extends Controller
      */
     public function show($id)
     {
-       return \App\Subbreddit::with('posts.comments.user')->find($id);
+        return \App\Subbreddit::with([
+            'posts.comments.childComments',
+            'user'
+        ])->find($id);
     }
 
     /**
@@ -51,7 +59,13 @@ class SubbredditController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $subbreddit = \App\Subbreddit::find($id);
+        $subbreddit->user_id = Auth::user()->id;
+        $subbreddit->name = $request->name;
+        $subbreddit->description = $request->description;
+        $subbreddit->save();
+
+        return $subbreddit;
     }
 
     /**
@@ -62,6 +76,8 @@ class SubbredditController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $subbreddit = \App\Subbreddit::find($id);
+        $subbreddit->delete();
+        return $subbreddit;
     }
 }
