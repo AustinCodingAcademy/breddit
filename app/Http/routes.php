@@ -10,6 +10,9 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+Route::get('/', function () {
+    return view('welcome');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -22,22 +25,29 @@
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
-    Route::get('/', function () {
-        return view('welcome');
-    });
-
-    Route::resource('subbreddits', 'SubbredditsController', [
-    	'only' => ['index', 'show']
-    ]);
-});
-
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
 
     Route::get('/home', 'HomeController@index');
 
     Route::resource('subbreddits', 'SubbredditsController', [
-    	'except' => ['create', 'edit']
+        'except' => ['edit', 'create']
     ]);
+
+    Route::resource('posts', 'PostsController', [
+        'except' => ['edit', 'create']
+    ]);
+
+    Route::resource('comments', 'CommentsController', [
+        'except' => ['edit', 'create']
+    ]);
+
+    Route::group(['middleware' => 'auth'], function () {
+        Route::resource('subbreddits', 'SubbredditsController', [
+            'only' => ['store', 'update', 'destroy']
+        ]);
+    });
+
 });
+
+

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class SubbredditsController extends Controller
+class CommentsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class SubbredditsController extends Controller
      */
     public function index()
     {
-        return \App\Subbreddit::all();
+        return \App\Comment::all();
     }
 
     /**
@@ -27,13 +27,14 @@ class SubbredditsController extends Controller
      */
     public function store(Request $request)
     {
-        $subbreddit = new \App\Subbreddit;
-        $subbreddit->user_id = \Auth::user()->id;
-        $subbreddit->name = $request->name;
-        $subbreddit->description = $request->description;
-        $subbreddit->save();
+        $comment = new \App\Comment;
+        $comment->user_id = \Auth::user->$id;
+        $comment->comment_id = $request->comment_id;
+        $comment->post_id = $request->post_id;
+        $comment->content = $request->comment_content;
+        $comment->save();
 
-        return $subbreddit;
+        return $comment;
     }
 
     /**
@@ -44,10 +45,7 @@ class SubbredditsController extends Controller
      */
     public function show($id)
     {
-        return \App\Subbreddit::with([
-            'posts.comments.childComments',
-            'user'
-        ])->find($id);
+        return \App\Comment::find($id);
     }
 
     /**
@@ -59,12 +57,11 @@ class SubbredditsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $subbreddit = \App\Subbreddit::find($id);
-        $subbreddit->name = $request->name;
-        $subbreddit->description = $request->description;
-        $subbreddit->save();
+        $comment = \App\Comment::find($id);
+        $comment->content = $request->comment_content;
+        $comment->save();
 
-        return $subbreddit;
+        return $comment;
     }
 
     /**
@@ -75,8 +72,8 @@ class SubbredditsController extends Controller
      */
     public function destroy($id)
     {
-        $subbreddit = \App\Subbreddit::find($id);
-        $subbreddit->delete();
-        return $subbreddit;
+        $comment = \App\Comment::find($id);
+        $comment->delete();
+        return $comment;
     }
 }
