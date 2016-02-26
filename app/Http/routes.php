@@ -31,19 +31,25 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/home', 'HomeController@index');
 
     Route::resource('subbreddits', 'SubbredditsController', [
-        'except' => ['edit', 'create']
+        'only' => ['index', 'show']
     ]);
 
     Route::resource('posts', 'PostsController', [
-        'except' => ['edit', 'create']
+        'only' => ['index', 'show']
     ]);
 
     Route::resource('comments', 'CommentsController', [
-        'except' => ['edit', 'create']
+        'only' => ['index', 'show']
     ]);
 
     Route::group(['middleware' => 'auth'], function () {
         Route::resource('subbreddits', 'SubbredditsController', [
+            'only' => ['store', 'update', 'destroy']
+        ]);
+        Route::resource('posts', 'PostsController', [
+            'only' => ['store', 'update', 'destroy']
+        ]);
+        Route::resource('comments', 'commentssController', [
             'only' => ['store', 'update', 'destroy']
         ]);
     });
