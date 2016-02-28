@@ -67,7 +67,7 @@ class PostsController extends Controller
             $post->url = $request->url;
 
             $post->save();
-        else {
+        } else {
             return response("Unauthorized", 403);
         }
 
@@ -85,7 +85,7 @@ class PostsController extends Controller
         $post = \App\Post::find($id);
         if ($post->user_id == \Auth::user()->id) {
             $post->delete();
-        else {
+        } else {
             return response("Unauthorized", 403);
         }
         return $post;
