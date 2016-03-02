@@ -16,7 +16,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        return \App\Post::all();
+        return \App\Post::with('subbreddit')->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -29,7 +29,7 @@ class PostsController extends Controller
     {
         $post = new \App\Post;
         $post->title = $request->title;
-        $post->content = $request->post_content;
+        $post->post_content = $request->post_content;
         $post->subbreddit_id = $request->subbreddit_id;
         $post->user_id = \Auth::user()->id;
         $post->url = $request->url;
@@ -63,11 +63,11 @@ class PostsController extends Controller
         $post = \App\Post::find($id);
         if ($post->user_id == \Auth::user()->id) {
             $post->title = $request->title;
-            $post->content = $request->post_content;
+            $post->post_content = $request->post_content;
             $post->url = $request->url;
 
             $post->save();
-        else {
+        } else {
             return response("Unauthorized", 403);
         }
 
@@ -85,7 +85,7 @@ class PostsController extends Controller
         $post = \App\Post::find($id);
         if ($post->user_id == \Auth::user()->id) {
             $post->delete();
-        else {
+        } else {
             return response("Unauthorized", 403);
         }
         return $post;
