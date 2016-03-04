@@ -11,13 +11,33 @@ var PostModel = Backbone.Model.extend({
 	idAttribute: 'id',
 });
 
-var PostCollection = Backbone.Collection.extend({
+var SubbredditModel = Backbone.Model.extend({
+	urlRoot: '/api/subbreddits/',
+	idAttribute: 'id'
+});
+
+var CommentModel = Backbone.Model.extend({
+	urlRoot: '/api/comments/',
+	idAttribute: 'id'
+});
+
+var PostsCollection = Backbone.Collection.extend({
 	url: '/api/posts/',
 	model: PostModel
 });
 
+var SubbredditsCollection = Backbone.Collection.extend({
+	url: '/api/subbreddits/',
+	model: SubbredditModel
+});
+
+var CommentsCollection = Backbone.Collection.extend({
+	url: '/api/comments/',
+	model: CommentModel
+});
+
 var PostItemView = Backbone.View.extend({
-	el:'<div></div>',
+	el:'<li class="hello"></li>',
 
 	template: _.template('<h2><%= post.get("title") %></h2>'),
 
@@ -26,16 +46,33 @@ var PostItemView = Backbone.View.extend({
 	}
 });
 
-var post = new PostModel({id: 1});
+var PostsListView = Backbone.View.extend({
+	el: '<ul></ul>',
 
-post.fetch({
-	success: function() {
-		var postItemView = new PostItemView({ model: post });
-		postItemView.render();
+	template: undefined,
 
-		$('#content').html(postItemView.el);
+	render: function() {
+		var that = this;
+		this.collection.each(function(postModel) {
+			var postItemView = new PostItemView({ model: postModel });
+			postItemView.render();
+			that.$el.append(postItemView.el);
+		});
 	}
 });
+
+
+
+// var post = new PostModel({id: 1});
+
+// post.fetch({
+// 	success: function() {
+// 		var postItemView = new PostItemView({ model: post });
+// 		postItemView.render();
+
+// 		$('#content').html(postItemView.el);
+// 	}
+// });
 
 
 
