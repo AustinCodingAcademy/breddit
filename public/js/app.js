@@ -41,6 +41,19 @@ var PostItemView = Backbone.View.extend({
 
 	template: _.template('<h2><%= post.get("title") %></h2>'),
 
+	events: {
+		'click h2': function(e) {
+			this.model.destroy();
+		}
+	},
+
+	initialize: function() {
+		// this.listenTo(this.model, 'all', function() {
+		// 	console.log(arguments);
+		// });
+		this.listenTo(this.model, 'sync', this.render);
+	},
+
 	render: function() {
 		this.$el.html(this.template({ post: this.model }));
 	}
@@ -51,31 +64,33 @@ var PostsListView = Backbone.View.extend({
 
 	template: undefined,
 
+	initialize: function() {
+		this.listenTo(this.collection, 'all', function(event) {
+			console.log(event);
+		});
+		this.listenTo(this.collection, 'sync update', this.render);
+	},
+
 	render: function() {
 		var that = this;
+		this.$el.html('');
 		this.collection.each(function(postModel) {
 			var postItemView = new PostItemView({ model: postModel });
 			postItemView.render();
 			that.$el.append(postItemView.el);
 		});
+		return this;
 	}
 });
 
+var posts = new PostsCollection();
 
+posts.fetch();
 
-// var post = new PostModel({id: 1});
+var postsListView = new PostsListView({collection: posts});
+postsListView.render();
 
-// post.fetch({
-// 	success: function() {
-// 		var postItemView = new PostItemView({ model: post });
-// 		postItemView.render();
-
-// 		$('#content').html(postItemView.el);
-// 	}
-// });
-
-
-
-
+$('#content').html(postsListView.el);
+console.log('view inserted!');
 
 
