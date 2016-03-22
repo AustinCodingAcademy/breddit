@@ -28,10 +28,17 @@ class CommentsController extends Controller
     public function store(Request $request)
     {
         $comment = new \App\Comment;
+<<<<<<< HEAD
+        $comment->user_id = Auth::user()->id;
+        $comment->content = $request->comment_content;
+        $comment->post_id = $request->post_id;
+        $comment->comment_id = $request->comment_id;
+=======
         $comment->user_id = \Auth::user()->$id;
         $comment->comment_id = $request->comment_id;
         $comment->post_id = $request->post_id;
         $comment->comment_content = $request->comment_content;
+>>>>>>> upstream/master
         $comment->save();
 
         return $comment;
@@ -58,6 +65,13 @@ class CommentsController extends Controller
     public function update(Request $request, $id)
     {
         $comment = \App\Comment::find($id);
+<<<<<<< HEAD
+        $comment->content = $request->comment_content;
+        $comment->save();
+
+        return $subbreddit;
+
+=======
         if ($comment->user_id == \Auth::user()->id) {
             $comment->comment_content = $request->comment_content;
             $comment->save();
@@ -66,6 +80,7 @@ class CommentsController extends Controller
         }
 
         return $comment;
+>>>>>>> upstream/master
     }
 
     /**
@@ -76,12 +91,17 @@ class CommentsController extends Controller
      */
     public function destroy($id)
     {
+<<<<<<< HEAD
+        $comment = \App\Post::find($id);
+        $comment->delete();
+=======
         $comment = \App\Comment::find($id);
         if ($comment->user_id == \Auth::user()->id) {
             $comment->delete();
         } else {
             return response("Unauthorized", 403);
         }
+>>>>>>> upstream/master
         return $comment;
     }
 }
