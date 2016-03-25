@@ -1,96 +1,100 @@
 'use strict';
 
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
+// $(document).on('ready', function() {
 
-var PostModel = Backbone.Model.extend({
-	urlRoot: '/api/posts/',
-	idAttribute: 'id',
-});
+	$.ajaxSetup({
+	    headers: {
+	        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	    }
+	});
 
-var SubbredditModel = Backbone.Model.extend({
-	urlRoot: '/api/subbreddits/',
-	idAttribute: 'id'
-});
+	var PostModel = Backbone.Model.extend({
+		urlRoot: '/api/posts/',
+		idAttribute: 'id',
+	});
 
-var CommentModel = Backbone.Model.extend({
-	urlRoot: '/api/comments/',
-	idAttribute: 'id'
-});
+	var SubbredditModel = Backbone.Model.extend({
+		urlRoot: '/api/subbreddits/',
+		idAttribute: 'id'
+	});
 
-var PostsCollection = Backbone.Collection.extend({
-	url: '/api/posts/',
-	model: PostModel
-});
+	var CommentModel = Backbone.Model.extend({
+		urlRoot: '/api/comments/',
+		idAttribute: 'id'
+	});
 
-var SubbredditsCollection = Backbone.Collection.extend({
-	url: '/api/subbreddits/',
-	model: SubbredditModel
-});
+	var PostsCollection = Backbone.Collection.extend({
+		url: '/api/posts/',
+		model: PostModel
+	});
 
-var CommentsCollection = Backbone.Collection.extend({
-	url: '/api/comments/',
-	model: CommentModel
-});
+	var SubbredditsCollection = Backbone.Collection.extend({
+		url: '/api/subbreddits/',
+		model: SubbredditModel
+	});
 
-var PostItemView = Backbone.View.extend({
-	el:'<li class="hello"></li>',
+	var CommentsCollection = Backbone.Collection.extend({
+		url: '/api/comments/',
+		model: CommentModel
+	});
 
-	template: _.template('<h2><%= post.get("title") %></h2>'),
+	var HomeView = Backbone.View.extend({
+		el:'\
+			<div class="container">\
+				<div class="row">\
+					<div class="three columns"></div>\
+					<div class="six columns">\
+						<div class="row">\
+							<div class="twelve columns"></div>\
+						</div>\
+						<div class="row">\
+							<div class="twelve columns"></div>\
+						</div>\
+					</div>\
+					<div class="three columns" id="all-subbreddits"></div>\
+				</div>\
+			</div>\
+		',
 
-	events: {
-		'click h2': function(e) {
-			this.model.destroy();
+		render: function() {
+			var subbreddits = new SubbredditsCollection();
+			subbreddits.fetch();
+			var subbredditsListView = new SubbredditsListView({ 
+				collection: subbreddits
+			});
+			this.$el.find('#all-subbreddits').html(subbredditsListView.render().el);
+
+			return this;
 		}
-	},
+	});
 
-	initialize: function() {
-		// this.listenTo(this.model, 'all', function() {
-		// 	console.log(arguments);
-		// });
-		this.listenTo(this.model, 'sync', this.render);
-	},
+	var SubbredditsListView = Backbone.View.extend({
+		el: '<ul></ul>',
 
-	render: function() {
-		this.$el.html(this.template({ post: this.model }));
-	}
-});
+		template: _.template('\
+			<% subbreddits.each(function(subbreddit) { %>\
+				<li><a href="#"><%= subbreddit.get("name") %></a></li>\
+			<% }) %>\
+		'),
 
-var PostsListView = Backbone.View.extend({
-	el: '<ul></ul>',
+		initialize: function() {
+			this.listenTo(this.collection, 'update', this.render);
+		},
 
-	template: undefined,
+		render: function() {
+			this.$el.html(this.template({ subbreddits: this.collection }));
+			return this;
+		}
+	})
 
-	initialize: function() {
-		this.listenTo(this.collection, 'all', function(event) {
-			console.log(event);
-		});
-		this.listenTo(this.collection, 'sync update', this.render);
-	},
 
-	render: function() {
-		var that = this;
-		this.$el.html('');
-		this.collection.each(function(postModel) {
-			var postItemView = new PostItemView({ model: postModel });
-			postItemView.render();
-			that.$el.append(postItemView.el);
-		});
-		return this;
-	}
-});
+	var homeView = new HomeView();
+	$('#content').html(homeView.render().el);
 
-var posts = new PostsCollection();
+// })
 
-posts.fetch();
 
-var postsListView = new PostsListView({collection: posts});
-postsListView.render();
 
-$('#content').html(postsListView.el);
-console.log('view inserted!');
+
 
 
