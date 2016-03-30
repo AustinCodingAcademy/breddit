@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
     <style>
         body {
-            font-size: 10px;
+            font-size: 14px;
         }
 
         .container {
