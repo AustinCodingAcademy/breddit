@@ -10,6 +10,10 @@ gulp.task('bundle', function() {
 		entries: ['public/src/js/app.js'],
 		debug: true
 	}).bundle()
+	.on('error', function(error) {
+    console.log(error.toString());
+    this.emit('end');
+  })
 	.pipe(source('bundle.js'))
 	.pipe(buffer())
 	.pipe(gulp.dest('public/js/'));
