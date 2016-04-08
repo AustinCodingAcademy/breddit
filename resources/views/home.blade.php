@@ -34,6 +34,7 @@
     
 </head>
 <body>
+    <div id="nav"></div>
     <div id="content"></div>
     <!-- JavaScripts -->
     <script src="{{ asset('js/bundle.js') }}"></script>
