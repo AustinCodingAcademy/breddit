@@ -30,11 +30,11 @@ $factory->define(App\Post::class, function (Faker\Generator $faker) {
     return [
         'url' => $faker->url,
         'title' => $faker->sentence,
-        'content' => $faker->text
+        'post_content' => $faker->text
     ];
 });
 $factory->define(App\Comment::class, function (Faker\Generator $faker) {
     return [
-        'content' => $faker->text,
+        'comment_content' => $faker->text,
     ];
 });

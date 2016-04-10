@@ -15,5 +15,9 @@
 
   "browser": {
   	"foundation": "./node_modules/foundation-sites/js/foundation.js"
+  },
+
+  "scripts": {
+    "develop": "./node_modules/.bin/gulp"
   }
 }
