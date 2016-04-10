@@ -44,7 +44,7 @@ var HomeView = Backbone.View.extend({
 
 	insertSubscribedSubbreddits: function() {
 		var that = this;
-	  var currentUser = new UserModel({id: 1});
+	  var currentUser = new UserModel({id: $('[data-user-id]').data('user-id')});
 		currentUser.fetch({
 			success: function() {
 				var subbredditsListView = new SubbredditsListView({ 
