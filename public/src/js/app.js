@@ -4,7 +4,7 @@ var $ = window.$ = window.jQuery = require('jquery');
 require('foundation');
 
 var HomeView = require('./views/HomeView.js');
-var TopNavView = require('./views/TopNavView.js'); 
+var TopNavView = require('./views/TopNavView.js');
 
 $(document).on('ready', function() {
 	$(document).foundation();

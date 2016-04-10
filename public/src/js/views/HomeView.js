@@ -1,6 +1,12 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 
+var SubbredditsListView = require('./SubbredditsListView.js');
+var SubbredditsCollection = require('../collections/SubbredditsCollection.js');
+var PostsCollection = require('../collections/PostsCollection.js');
+var UserModel = require('../models/UserModel.js');
+
+
 var HomeView = Backbone.View.extend({
 	el:'\
 		<div class="container">\
@@ -15,35 +21,43 @@ var HomeView = Backbone.View.extend({
 				</div>\
 				<div class="small-5 columns">\
 					<ul class="tabs" data-tab>\
-					  <li class="tab-title active"><a href="#panel1">All</a></li>\
-					  <li class="tab-title"><a href="#panel2">Subscribed</a></li>\
+					  <li class="tab-title active"><a href="#all-subbreddits">All</a></li>\
+					  <li class="tab-title"><a href="#subscribed-subbreddits">Subscribed</a></li>\
 					</ul>\
 					<div class="tabs-content">\
-					  <div class="content active" id="panel1">\
-					    <div id="all-subbreddits"></div>\
-					  </div>\
-					  <div class="content" id="panel2">\
-					    <p>This is the second panel of the basic tab example. This is the second panel of the basic tab example.</p>\
-					  </div>\
+					  <div class="content active" id="all-subbreddits"></div>\
+					  <div class="content" id="subscribed-subbreddits"></div>\
 					</div>\
 				</div>\
 			</div>\
 		</div>\
 	',
 
-	insertSubbreddits: function() {
-		var SubbredditsCollection = require('../collections/SubbredditsCollection.js');
+	insertAllSubbreddits: function() {
 		var subbreddits = new SubbredditsCollection();
 		subbreddits.fetch();
-		var SubbredditsListView = require('./SubbredditsListView.js');
 		var subbredditsListView = new SubbredditsListView({ 
 			collection: subbreddits
 		});
 		this.$el.find('#all-subbreddits').html(subbredditsListView.render().el);
 	},
 
+	insertSubscribedSubbreddits: function() {
+		var that = this;
+	  var currentUser = new UserModel({id: 1});
+		currentUser.fetch({
+			success: function() {
+				var subbredditsListView = new SubbredditsListView({ 
+					collection: currentUser.get('subscribed_subbreddits')
+				});
+
+				that.$el.find('#subscribed-subbreddits').html(subbredditsListView.el);
+  			subbredditsListView.render();
+			}
+		});
+	},
+
 	insertPosts: function() {
-		var PostsCollection = require('../collections/PostsCollection.js');
 		var posts = new PostsCollection();
 		posts.fetch();
 		var PostsListView = require('./PostsListView.js');
@@ -54,7 +68,8 @@ var HomeView = Backbone.View.extend({
 	},
 
 	render: function() {
-		this.insertSubbreddits();
+		this.insertAllSubbreddits();
+		this.insertSubscribedSubbreddits();
 		this.insertPosts();
 		$(document).foundation('reflow', 'tabs');
 		return this;

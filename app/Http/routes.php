@@ -49,6 +49,10 @@ Route::group(['middleware' => 'web'], function () {
             'only' => ['index', 'show']
         ]);
 
+        Route::resource('users', 'UsersController', [
+            'only' => ['show']
+        ]);
+
         Route::group(['middleware' => 'auth'], function () {
             Route::resource('subbreddits', 'SubbredditsController', [
                 'only' => ['store', 'update', 'destroy']
