@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 
 var CommentModel = Backbone.Model.extend({
-	urlRoot: '/api/comments/',
+	urlRoot: '/api/comments',
 	idAttribute: 'id'
 });
 

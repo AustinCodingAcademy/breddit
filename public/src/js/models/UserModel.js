@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 
 var UserModel = Backbone.Model.extend({
-	urlRoot: '/api/users/',
+	urlRoot: '/api/users',
 	idAttribute: 'id',
 
 	parse: function(response) {
