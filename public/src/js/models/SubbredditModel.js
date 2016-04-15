@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 
 var SubbredditModel = Backbone.Model.extend({
-	urlRoot: '/api/subbreddits/',
+	urlRoot: '/api/subbreddits',
 	idAttribute: 'id',
 
 	parse: function(response) {
