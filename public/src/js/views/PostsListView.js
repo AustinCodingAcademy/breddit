@@ -1,25 +1,15 @@
 var Backbone = require('backbone');
-var _ = require('underscore');
+var PostsListTemplate = require('../templates/PostsListTemplate.ejs');
 
 var PostsListView = Backbone.View.extend({
 	el: '<ul></ul>',
-	template: _.template('\
-		<% posts.each(function(post) { %>\
-			<li>\
-				<a href="#post/<%= post.id %>"><%= post.get("title") %></a>\
-				<% if (post.get("subbreddit")) { %>\
-					<small><%= post.get("subbreddit").get("name") %></small>\
-				<% } %>\
-			</li>\
-		<% }) %>\
-	'),
 
 	initialize: function() {
 		this.listenTo(this.collection, 'update', this.render);
 	},
 
 	render: function() {
-		this.$el.html(this.template({ posts: this.collection }));
+		this.$el.html(PostsListTemplate({ posts: this.collection }));
 		return this;
 	}
 });

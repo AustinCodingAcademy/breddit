@@ -10,9 +10,9 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 if (env('APP_DEBUG')) {
     // Route to view logs. Only for use in development
@@ -34,7 +34,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::auth();
 
     // this is where our app lives -kevin 
-    Route::get('/home', 'HomeController@index');
+    Route::get('/', 'HomeController@index');
 
     Route::group(['prefix' => 'api'], function () {
         Route::resource('subbreddits', 'SubbredditsController', [
@@ -62,6 +62,9 @@ Route::group(['middleware' => 'web'], function () {
             ]);
             Route::resource('comments', 'CommentsController', [
                 'only' => ['store', 'update', 'destroy']
+            ]);
+            Route::resource('subbreddituser', 'SubbredditUserController', [
+                'only' => ['store']
             ]);
         });
     });

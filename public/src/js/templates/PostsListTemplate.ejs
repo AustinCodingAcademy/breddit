@@ -1,0 +1,8 @@
+<% posts.each(function(post) { %>
+	<li>
+		<a href="#post/<%= post.id %>"><%= post.get("title") %></a>
+		<% if (post.get("subbreddit")) { %>
+			<small><%= post.get("subbreddit").get("name") %></small>
+		<% } %>
+	</li>
+<% }) %>

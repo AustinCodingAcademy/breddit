@@ -11,9 +11,12 @@ var SubbredditsListView = Backbone.View.extend({
 
 	template: _.template('\
 		<% subbreddits.each(function(subbreddit) { %>\
-			<li><a id="subbreddit" data-id="<%= subbreddit.id %>" href="#"><%= subbreddit.get("name") %></a></li>\
+			<li>\
+				<a id="subbreddit" data-id="<%= subbreddit.id %>" href="#"><%= subbreddit.get("name") %></a>\
+				<small><a href="#" id="subscribe" data-id="<%= subbreddit.id %>">subscribe</a></small>\
+			</li>\
 		<% }) %>\
-		<li><a href="#" id="add-subbreddit" data-reveal-id="modal">Add Subbreddit</a>\
+		<li><a ref="#" id="add-subbreddit" data-reveal-id="modal">Add Subbreddit</a>\
 	'),
 
 	events: {
@@ -28,6 +31,25 @@ var SubbredditsListView = Backbone.View.extend({
 					});
 					$('#posts').html(postsListView.render().el);
 				}
+			})
+		},
+
+		'click #subscribe': function(event) {
+			var that = this;
+			event.preventDefault();
+			var subbredditId = $(event.target).data('id');
+			console.log(subbredditId);
+			$.ajax('/api/subbreddituser', {
+				type: "post",
+				data: {
+					subbreddit_id: subbredditId
+				},
+				success: function() {
+					if (that.currentUser) {
+						var subscribedSubbreddit = that.collection.get(subbredditId);
+						that.currentUser.get('subscribed_subbreddits').add(subscribedSubbreddit);
+					}
+				}
 			});
 		},
 
@@ -40,8 +62,9 @@ var SubbredditsListView = Backbone.View.extend({
 		}
 	},
 
-	initialize: function() {
+	initialize: function(options) {
 		this.listenTo(this.collection, 'update', this.render);
+		this.currentUser = options.currentUser;
 	},
 
 	render: function() {

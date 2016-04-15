@@ -5,50 +5,31 @@ var SubbredditsListView = require('./SubbredditsListView.js');
 var SubbredditsCollection = require('../collections/SubbredditsCollection.js');
 var PostsCollection = require('../collections/PostsCollection.js');
 var UserModel = require('../models/UserModel.js');
+var HomeTemplate = require('../templates/HomeTemplate.ejs');
 
 
 var HomeView = Backbone.View.extend({
-	el:'\
-		<div class="container">\
-			<div class="row">\
-				<div class="small-7 columns">\
-					<div class="row">\
-						<div class="small-12 columns" id="posts"></div>\
-					</div>\
-					<div class="row">\
-						<div class="small-12 columns"></div>\
-					</div>\
-				</div>\
-				<div class="small-5 columns">\
-					<ul class="tabs" data-tab>\
-					  <li class="tab-title active"><a href="#all-subbreddits">All</a></li>\
-					  <li class="tab-title"><a href="#subscribed-subbreddits">Subscribed</a></li>\
-					</ul>\
-					<div class="tabs-content">\
-					  <div class="content active" id="all-subbreddits"></div>\
-					  <div class="content" id="subscribed-subbreddits"></div>\
-					</div>\
-				</div>\
-			</div>\
-		</div>\
-	',
+	el:'<div class="container"></div>',
+
+	currentUser: new UserModel({id: $('[data-user-id]').data('user-id')}),
 
 	insertAllSubbreddits: function() {
 		var subbreddits = new SubbredditsCollection();
 		subbreddits.fetch();
 		var subbredditsListView = new SubbredditsListView({ 
-			collection: subbreddits
+			collection: subbreddits,
+			currentUser: this.currentUser
 		});
 		this.$el.find('#all-subbreddits').html(subbredditsListView.render().el);
 	},
 
 	insertSubscribedSubbreddits: function() {
 		var that = this;
-	  var currentUser = new UserModel({id: $('[data-user-id]').data('user-id')});
-		currentUser.fetch({
+	  
+		this.currentUser.fetch({
 			success: function() {
 				var subbredditsListView = new SubbredditsListView({ 
-					collection: currentUser.get('subscribed_subbreddits')
+					collection: that.currentUser.get('subscribed_subbreddits')
 				});
 
 				that.$el.find('#subscribed-subbreddits').html(subbredditsListView.el);
@@ -68,6 +49,7 @@ var HomeView = Backbone.View.extend({
 	},
 
 	render: function() {
+		this.$el.html(HomeTemplate());
 		this.insertAllSubbreddits();
 		this.insertSubscribedSubbreddits();
 		this.insertPosts();

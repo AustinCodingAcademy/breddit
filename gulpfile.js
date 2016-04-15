@@ -6,11 +6,13 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
+var ejsify = require('ejsify');
 
 gulp.task('bundle', function() {
 	return browserify({
 		entries: ['public/src/js/app.js'],
-		debug: true
+		debug: true,
+		transform: [ejsify]
 	}).bundle()
 	.on('error', function(error) {
     console.log(error.toString());
@@ -31,6 +33,7 @@ gulp.task('sass', function () {
 
 gulp.task('watch', function() {
 	gulp.watch('public/src/js/**/*.js', ['bundle']);
+	gulp.watch('public/src/js/**/*.ejs', ['bundle']);
 	gulp.watch('public/src/scss/**/*.scss', ['sass']);
 });
 
